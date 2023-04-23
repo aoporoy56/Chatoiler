@@ -8,7 +8,7 @@ import axios from "axios";
 import Messages from "./Messages";
 import io from "socket.io-client";
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "https://chatoiler.onrender.com";
 var socket, selectedChatCompare;
 
 export default function ChatBox({ fetchAgain, setFetchAgain }) {
