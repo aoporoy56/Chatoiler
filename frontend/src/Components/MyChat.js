@@ -20,7 +20,7 @@ export default function MyChat({ fetchAgain }) {
       setChat(data);
     } catch (error) {
       console.log("Failed to load");
-      fetchChats();
+      // fetchChats();
     }
     
     if (selectedChat) {
@@ -29,7 +29,7 @@ export default function MyChat({ fetchAgain }) {
   };
   useEffect(() => {
     fetchChats();
-  }, [fetchAgain]);
+  }, []);
   return (
     <div
       className="col-md-4 p-3"

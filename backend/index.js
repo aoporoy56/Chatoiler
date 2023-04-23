@@ -8,6 +8,7 @@ const { connectDB } = require("./config/mongo_connection");
 const UserRouter = require("./routes/UserRoute");
 const ChatRoute = require("./routes/ChatRoute");
 const MessgeRoute = require("./routes/MessageRoute");
+const path = require("path");
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 
@@ -21,9 +22,17 @@ app.use("/api", UserRouter);
 app.use("/api/chat", ChatRoute);
 app.use("/api/message", MessgeRoute);
 
-app.use("*", (req, res) => {
-  res.send("Invalid Route");
-});
+// app.use("*", (req, res) => {
+//   res.send("Invalid Route");
+// });
+
+app.use(express.static(path.join(__dirname,"../frontend/build")))
+app.get("*",(req,res)=>{
+    res.sendFile(path.join(__dirname,"../frontend/build/index.html"))
+})
+
+
+
 const server = myServer.listen(PORT, () => {
   console.log("Server Running : " + PORT);
 });
