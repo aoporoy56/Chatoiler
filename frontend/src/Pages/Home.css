@@ -1,0 +1,28 @@
+.container{
+    padding: 20px 0;
+}
+.header{
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 25px;
+    text-align: center;
+    font-weight: bold;
+}
+.content{
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+.nav{
+    background-color: rgb(159, 209, 238);
+    border-radius: 10px;
+}
+.nav-button{
+    width: 50%;
+    text-align: center;
+}

@@ -1,0 +1,27 @@
+
+.search {
+    display: flex;
+}
+.search button {
+  outline: 0;
+  border: 0;
+}
+.single-user{
+    display: flex;
+    align-items: center;
+    background-color: aliceblue;
+    margin-top: 15px;
+    border-radius: 12px;
+    padding: 10px 12px;
+}
+.single-user h4{
+    margin: 0;
+    padding: 0;
+}
+.single-user p{
+    margin: 0;
+    padding: 0;
+}
+.single-user .user-info{
+    margin-left: 15px;
+}

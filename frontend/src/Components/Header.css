@@ -1,0 +1,21 @@
+.top-header {
+  width: 100%;
+  padding: 10px 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dropdown{
+    display: flex;
+}
+.right-side {
+  display: flex;
+  align-items: center;
+  font-size: 25px;
+}
+.profile {
+  margin-left: 20px;
+}
+.profile img {
+  border-radius: 50%;
+}
