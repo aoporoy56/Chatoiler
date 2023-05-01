@@ -7,18 +7,22 @@ import Profile from "../Modal/Profile";
 import axios from "axios";
 import Messages from "./Messages";
 import io from "socket.io-client";
+import UpdateGroup from "../Modal/UpdateGroup";
 
-const ENDPOINT = "https://chatoiler.onrender.com";
+const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare;
 
 export default function ChatBox({ fetchAgain, setFetchAgain }) {
   const { selectedChat, user } = ChatState();
   const [showModal, setShowModal] = useState(false);
+  const [showUpdateGroupModal, setShowUpdateGroupModal] = useState(false);
   const [newMessage, setNewMessage] = useState();
   const [messageList, setMessageList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [socketConnected, setSocketConnected] = useState(false);
-
+  const [typingAlert, setTypingAlert] = useState(false);
+  const [isTypingAlert, setIsTypingAlert] = useState(false);
+  console.log("Chat Bok");
   const fetchMessage = async () => {
     setLoading(true);
     try {
@@ -34,15 +38,35 @@ export default function ChatBox({ fetchAgain, setFetchAgain }) {
       console.log(error.message);
     }
     setLoading(false);
-    socket.emit("chat-join", selectedChat._id);
-    // socket.on()
+    if (selectedChat) {
+      socket.emit("chat-join", selectedChat._id);
+    }
   };
 
   const messageHandle = (e) => {
     setNewMessage(e.target.value);
+    if (!socketConnected) return;
+    if (!typingAlert) {
+      setTypingAlert(true);
+      socket.emit("typing", selectedChat._id);
+    }
+
+    socket.emit("typing", selectedChat._id);
+    let lastTypingTime = new Date().getTime();
+    var timerLength = 3000;
+    setTimeout(() => {
+      var timeNow = new Date().getTime();
+      var timeDiff = (timeNow = lastTypingTime);
+      if (timeDiff >= timerLength && typingAlert) {
+        socket.emit("stop-typing", selectedChat._id);
+        setTypingAlert(false);
+      }
+    }, timerLength);
+
   };
   const sendMessage = async (e) => {
     if (e.key === "Enter") {
+      socket.emit("stop-typing", selectedChat._id);
       console.log(newMessage);
       try {
         const { data } = await axios.post(
@@ -59,7 +83,7 @@ export default function ChatBox({ fetchAgain, setFetchAgain }) {
         );
         if (data) {
           socket.emit("new-message", data);
-          setFetchAgain(true);
+          // setFetchAgain(true);
           setMessageList([...messageList, data]);
           console.log(data);
           setNewMessage("");
@@ -76,11 +100,13 @@ export default function ChatBox({ fetchAgain, setFetchAgain }) {
     socket.on("connected", () => {
       setSocketConnected(true);
     });
+    socket.on("typing", () => setIsTypingAlert(true));
+    socket.on("stop-typing", () => setIsTypingAlert(false));
   }, []);
 
   useEffect(() => {
-    fetchMessage();
     selectedChatCompare = selectedChat;
+    fetchMessage();
   }, [selectedChat]);
 
   useEffect(() => {
@@ -92,6 +118,9 @@ export default function ChatBox({ fetchAgain, setFetchAgain }) {
       } else {
         setMessageList([...messageList, recievedMessage]);
       }
+    });
+    socket.on("typing", () => {
+      setTypingAlert(true);
     });
   });
 
@@ -117,7 +146,7 @@ export default function ChatBox({ fetchAgain, setFetchAgain }) {
             {selectedChat && !loading && (
               <div className="h-100">
                 <div className="d-flex justify-content-between align-items-center mb-2">
-                  <h3 className="m-0">
+                  <h3 className="m-0" key={fetchAgain}>
                     {
                       !selectedChat.isGroupChat &&
                         GetSender(selectedChat, user).name
@@ -125,7 +154,7 @@ export default function ChatBox({ fetchAgain, setFetchAgain }) {
                     }
                     {selectedChat.isGroupChat && selectedChat.chatName}
                   </h3>
-                  {!selectedChat.isGroupChat && (
+                  {!selectedChat.isGroupChat ? (
                     <div>
                       <Button onClick={() => setShowModal(true)}>
                         <CgProfile />
@@ -140,6 +169,18 @@ export default function ChatBox({ fetchAgain, setFetchAgain }) {
                         showModal={showModal}
                       />
                     </div>
+                  ) : (
+                    <div>
+                      <Button onClick={() => setShowUpdateGroupModal(true)}>
+                        <CgProfile />
+                      </Button>
+                      <UpdateGroup
+                        setFetchAgain={setFetchAgain}
+                        groupChat={selectedChat}
+                        setShowUpdateGroupModal={setShowUpdateGroupModal}
+                        showUpdateGroupModal={showUpdateGroupModal}
+                      />
+                    </div>
                   )}
                 </div>
                 <div
@@ -151,20 +192,24 @@ export default function ChatBox({ fetchAgain, setFetchAgain }) {
                   }}
                 >
                   {messageList.length !== 0 ? (
-                    <Messages messageList={messageList} />
+                    <Messages
+                      messageList={messageList}
+                      typingAlert={typingAlert}
+                    />
                   ) : (
                     <div className="h-100 d-flex justify-content-center align-items-center display-4">
                       No Message Yet
                     </div>
                   )}
+                  {isTypingAlert ? <>Loading..</> : <></>}
+                  <Form.Control
+                    size="sm"
+                    type="text"
+                    placeholder="Write message..."
+                    onChange={messageHandle}
+                    onKeyDown={sendMessage}
+                  />
                 </div>
-                <Form.Control
-                  size="sm"
-                  type="text"
-                  placeholder="Write message..."
-                  onChange={messageHandle}
-                  onKeyDown={sendMessage}
-                />
               </div>
             )}
             {!selectedChat && (

@@ -78,6 +78,7 @@ export default function CreateGroup({ value, handleValue }) {
                 type="text"
                 placeholder="Group Name"
                 onChange={(e) => setGroupName(e.target.value)}
+                required
                 autoFocus
               />
             </Form.Group>
@@ -86,6 +87,7 @@ export default function CreateGroup({ value, handleValue }) {
                 type="text"
                 placeholder="Add User Name"
                 onChange={searchHandle}
+                
               />
             </Form.Group>
           </Form>

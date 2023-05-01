@@ -16,17 +16,10 @@ export default function SearchResultUser({ value, canvasHandle }) {
         }
       );
       if (data) {
-        console.log(!chat.find((newUser) => newUser._id === data[0]._id));
-        if (!chat.find((newUser) => newUser._id === data[0]._id)) {
-          setChat([data[0], ...chat]);
-          // setSelectedChat(data);
-        // setChat([...chat]);
-        setSelectedChat(data[0]);
-        } else {
-          console.log("delete")
-          setChat([...chat]);
-          setSelectedChat(chat.filter((chats)=> chats._id === data[0]._id));
-        }
+        console.log(data)
+          setChat([data, ...chat]);
+          setSelectedChat(data);
+        
       }
       canvasHandle();
     } catch (error) {

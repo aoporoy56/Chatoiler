@@ -2,7 +2,7 @@ import React from "react";
 import ScrollableFeed from "react-scrollable-feed";
 import { isSameSender } from "../config/GetSender";
 import { ChatState } from "../Context/ChatProvider";
-export default function Messages({ messageList }) {
+export default function Messages({ messageList, typingAlert }) {
   const { user } = ChatState();
   console.log(messageList);
   return (
@@ -11,11 +11,11 @@ export default function Messages({ messageList }) {
       {messageList &&
         messageList.map((message, i) => {
           return message.sender._id === user._id ? (
-            <div className="d-flex justify-content-end">
+            <div className="d-flex justify-content-end" key={i}>
               <div
                 style={{
                   background: "#0a68ff",
-                  color : "white",
+                  color: "white",
                   borderRadius: "15px",
                   padding: "5px 10px",
                   margin: "2px",

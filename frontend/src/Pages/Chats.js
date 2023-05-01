@@ -20,7 +20,7 @@ export default function Chats() {
   return (
     <div className="chats">
       {user && <Header />}
-      <div className="d-flex p-4 h-100">
+      <div className="d-flex h-100">
         {user && <MyChat fetchAgain={fetchAgain} />}
         {user && (
           <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />

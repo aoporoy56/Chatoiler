@@ -7,7 +7,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { ChatState } from "../Context/ChatProvider";
 import { useNavigate } from "react-router-dom";
 import Profile from "../Modal/Profile";
-
+import Logo from "./Logo";
 export default function Header() {
   const { user } = ChatState();
   const navigate = useNavigate();
@@ -18,7 +18,9 @@ export default function Header() {
   };
   return (
     <div className="top-header">
-      <h3>Chatoiler</h3>
+      <a href="/">
+        <Logo />
+      </a>
 
       <div className="search-box"></div>
 

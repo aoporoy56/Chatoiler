@@ -6,9 +6,9 @@ const ChatRoute = express.Router();
 ChatRoute.route("/").post(middle,accessChat);
 ChatRoute.route("/").get(middle,fetchChat);
 ChatRoute.route("/group").post(middle, createGroup);
-ChatRoute.route("/rename").put(middle, renameGroup);
+ChatRoute.route("/rename").post(middle, renameGroup);
 ChatRoute.route("/memberAdd").post(middle, memberAdd);
-ChatRoute.route("/memberRemove").put(middle, memberRemove);
+ChatRoute.route("/memberRemove").post(middle, memberRemove);
 
 
 module.exports = ChatRoute;

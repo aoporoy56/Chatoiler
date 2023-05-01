@@ -9,7 +9,7 @@ const UserRouter = require("./routes/UserRoute");
 const ChatRoute = require("./routes/ChatRoute");
 const MessgeRoute = require("./routes/MessageRoute");
 const path = require("path");
-dotenv.config({path : path.join(__dirname+"../.env")});
+dotenv.config({ path: __dirname + "./../.env" });
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
@@ -26,12 +26,10 @@ app.use("/api/message", MessgeRoute);
 //   res.send("Invalid Route");
 // });
 
-app.use(express.static(path.join(__dirname,"../frontend/build")))
-app.get("*",(req,res)=>{
-    res.sendFile(path.join(__dirname,"../frontend/build/index.html"))
-})
-
-
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+});
 
 const server = myServer.listen(PORT, () => {
   console.log("Server Running : " + PORT);
@@ -43,23 +41,31 @@ const io = require("socket.io")(server, {
   },
 });
 io.on("connection", (socket) => {
-    console.log("Connection");
-    
-    socket.on("join",(userId)=>{
-        socket.join(userId);
-        socket.emit("connected")
-    })
-    socket.on("chat-join",(chatId)=>{
-        socket.join(chatId);
-        console.log("User Join on : ",chatId);
-    })
-    socket.on("new-message",(newMessageData)=>{
-        newMessageData.chat.users.forEach((user)=>{
-            if(user._id !== newMessageData.sender._id){
-                socket.in(user._id).emit("Recieved Message", newMessageData);
-            }
-        })
-    })
+  console.log("Connection");
 
+  socket.on("join", (userId) => {
+    socket.join(userId);
+    socket.emit("connected");
+  });
 
+  socket.on("chat-join", (chatId) => {
+    socket.join(chatId);
+    console.log("User Join on : ", chatId);
+  });
+
+  socket.on("new-message", (newMessageData) => {
+    socket.in(newMessageData.chat._id).emit("Recieved Message", newMessageData);
+    // newMessageData.chat.users.forEach((user) => {
+    //   if (user._id !== newMessageData.sender._id) {
+    //     socket.in(user._id).emit("Recieved Message", newMessageData);
+    //   }
+    // });
+  });
+
+  socket.on("typing", (room) => {
+    socket.in(room).emit("typing");
+  });
+  socket.on("stop-typing", (room) => {
+    socket.in(room).emit("stop-typing");
+  });
 });

@@ -7,7 +7,7 @@ import SingleChat from "./SingleChat";
 import CreateGroup from "../Modal/CreateGroup";
 
 export default function MyChat({ fetchAgain }) {
-  const { user, setUser, selectedChat, setSelectedChat, chat, setChat } =
+  const { user, selectedChat, setSelectedChat, chat, setChat } =
     ChatState();
   const [createGroupShow, setCreateGroupShow] = useState(false);
   const fetchChats = async () => {
@@ -17,19 +17,20 @@ export default function MyChat({ fetchAgain }) {
           Authorization: `Bearer ${user.token}`,
         },
       });
-      setChat(data);
+      if(data){
+        setChat(data);
+      console.log("Fatching Data");
+      }
     } catch (error) {
       console.log("Failed to load");
       // fetchChats();
     }
     
-    if (selectedChat) {
-      setSelectedChat(setSelectedChat);
-    }
+    
   };
   useEffect(() => {
     fetchChats();
-  }, []);
+  }, [fetchAgain]);
   return (
     <div
       className="col-md-4 p-3"

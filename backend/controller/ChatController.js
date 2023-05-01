@@ -89,7 +89,7 @@ exports.createGroup = async (req, res) => {
 exports.renameGroup = async (req, res) => {
   console.log(req.body);
   const update = await ChatModel.findByIdAndUpdate(
-    req.body.id,
+    req.body.chatId,
     {
       chatName: req.body.chatName,
     },
@@ -123,6 +123,7 @@ exports.memberAdd = async (req, res) => {
     res.status(400).send("Group Member Add Faild");
     throw new Error("Person not Added");
   } else {
+    console.log(added)
     res.json(added);
   }
 };
@@ -146,6 +147,7 @@ exports.memberRemove = async (req, res) => {
     res.status(400).send("Group Member Remove Faild");
     throw new Error("Person not Removed");
   } else {
+    console.log(removed)
     res.json(removed);
   }
 };

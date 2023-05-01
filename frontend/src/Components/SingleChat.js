@@ -3,7 +3,7 @@ import { ChatState } from "../Context/ChatProvider";
 
 export default function SingleChat({ value }) {
   const { user, selectedChat, setSelectedChat } = ChatState();
-  console.log(value)
+  console.log(selectedChat);
   return (
     <div
       onClick={() => setSelectedChat(value)}
@@ -22,8 +22,8 @@ export default function SingleChat({ value }) {
               ? value.users[0].pic
               : value.users[1].pic
           }
-          alt=""
           width={"40px"}
+          height={"40px"}
           style={{ borderRadius: "30px", marginRight: "10px" }}
         />
       )}

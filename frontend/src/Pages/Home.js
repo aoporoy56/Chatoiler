@@ -5,6 +5,7 @@ import Login from "../Components/Login";
 import Signup from "../Components/Signup";
 import "react-toastify/dist/ReactToastify.min.css";
 import { useNavigate } from "react-router-dom";
+import Logo from "../Components/Logo";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -19,7 +20,9 @@ export default function Home() {
       <Row className="d-flex justify-content-center">
         <div className="col-md-6">
           <Row className="header">
-            <Col>Chatoiler</Col>
+            <Col>
+            <Logo />
+            </Col>
           </Row>
           <Row className="content mt-3 p-3">
             <Col>

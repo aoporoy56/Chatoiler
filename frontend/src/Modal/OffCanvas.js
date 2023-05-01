@@ -11,7 +11,7 @@ export default function OffCanvas({ value, valueChange }) {
   const [users, setUsers] = useState();
   const handleClose = () => {
     valueChange(false);
-    setUsers([])
+    setUsers([]);
   };
   const [input, setInput] = useState();
 
@@ -32,20 +32,39 @@ export default function OffCanvas({ value, valueChange }) {
             />
             <Button
               onClick={async () => {
-                const users = await axios.get("/api/user?search=" + input, {
+                const { data } = await axios.get("/api/user?search=" + input, {
                   headers: {
                     Authorization: `Bearer ${user.token}`,
                   },
                 });
-                setUsers(users.data);
+                
+                setUsers(
+                  data.filter(
+                    (singleUsers) =>
+                      !chat.some(
+                        (singleChat) =>
+                          !singleChat.isGroupChat &&
+                          (singleChat.users[0]._id === singleUsers._id ||
+                            singleChat.users[1]._id === singleUsers._id)
+                      )
+                  )
+                );
               }}
             >
               <BsSearch />
             </Button>
           </div>
           <div className="search-result">
-            
-            {users && users.map((user) => {return <SearchResultUser key={user._id} value={user} canvasHandle={handleClose} />})}
+            {users &&
+              users.map((user) => {
+                return (
+                  <SearchResultUser
+                    key={user._id}
+                    value={user}
+                    canvasHandle={handleClose}
+                  />
+                );
+              })}
           </div>
         </Offcanvas.Body>
       </Offcanvas>
